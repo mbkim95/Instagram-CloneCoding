@@ -62,6 +62,7 @@
             android:theme="@style/ButtonStyle" />
 
         <Button
+            android:id="@+id/facebook_login_button"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
@@ -72,6 +73,7 @@
             android:textColor="@color/colorWhite" />
 
         <Button
+            android:id="@+id/google_login_button"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
