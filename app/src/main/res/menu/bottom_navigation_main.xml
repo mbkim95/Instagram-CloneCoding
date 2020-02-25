@@ -10,23 +10,23 @@
         android:id="@+id/action_search"
         android:enabled="true"
         android:icon="@drawable/ic_search"
-        android:title="@string/home" />
+        android:title="@string/search" />
 
     <item
         android:id="@+id/action_add_photo"
         android:enabled="true"
         android:icon="@drawable/ic_add_a_photo"
-        android:title="@string/home" />
+        android:title="@string/gallery" />
 
     <item
         android:id="@+id/action_favorite_alarm"
         android:enabled="true"
         android:icon="@drawable/ic_favorite_border"
-        android:title="@string/home" />
+        android:title="@string/favorite" />
 
     <item
         android:id="@+id/action_account"
         android:enabled="true"
         android:icon="@drawable/ic_account"
-        android:title="@string/home" />
+        android:title="@string/account" />
 </menu>
