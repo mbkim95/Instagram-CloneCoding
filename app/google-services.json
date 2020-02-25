@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "98417681106",
+    "firebase_url": "https://instagram-tutorial-7aa89.firebaseio.com",
+    "project_id": "instagram-tutorial-7aa89",
+    "storage_bucket": "instagram-tutorial-7aa89.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98417681106:android:e28164f2d302073965830b",
+        "android_client_info": {
+          "package_name": "com.project.instagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "98417681106-sosf7cnssqfltfporaatgir5qr8a8sqa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.instagram",
+            "certificate_hash": "339c8a39c97cd394056d887d1128ef559166e57b"
+          }
+        },
+        {
+          "client_id": "98417681106-fqpddepdqrf8ndr0ctr7uode4l473l9g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCViJpwyLR-Q7zdovaYAM2e1kZZs81daR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "98417681106-fqpddepdqrf8ndr0ctr7uode4l473l9g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
