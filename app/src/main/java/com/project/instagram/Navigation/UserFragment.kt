@@ -23,6 +23,10 @@ import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
 
 class UserFragment : Fragment() {
+    companion object {
+        const val PICK_PROFILE_FROM_ALBUM = 10
+    }
+
     var fragmentView: View? = null
     var firestore: FirebaseFirestore? = null
     var uid: String? = null
@@ -64,7 +68,29 @@ class UserFragment : Fragment() {
 
         fragmentView?.account_recyclerView?.adapter = UserFragmentRecyclerViewAdapter()
         fragmentView?.account_recyclerView?.layoutManager = GridLayoutManager(activity!!, 3)
+
+        fragmentView?.account_imageView_profile?.setOnClickListener {
+            val photoPickerIntent = Intent(Intent.ACTION_PICK)
+            photoPickerIntent.type = "image/*"
+            activity?.startActivityForResult(photoPickerIntent, PICK_PROFILE_FROM_ALBUM)
+        }
+        getProfileImage()
         return fragmentView
+    }
+
+    fun getProfileImage() {
+        firestore?.collection("profileImages")?.document(uid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) {
+                    return@addSnapshotListener
+                }
+                if (documentSnapshot.data != null) {
+                    var data = documentSnapshot.data
+                    val url = documentSnapshot.data!!["image"]
+                    Glide.with(activity!!).load(url).apply(RequestOptions().circleCrop())
+                        .into(fragmentView?.account_imageView_profile!!)
+                }
+            }
     }
 
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
