@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
             1
         )
+
+        // Set default screen
+        bottom_navigation.selectedItemId = R.id.action_home
     }
 
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
