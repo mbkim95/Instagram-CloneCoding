@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.project.instagram.Navigation.model.ContentDTO
 import com.project.instagram.R
 import kotlinx.android.synthetic.main.fragment_detail.view.*
@@ -38,7 +39,7 @@ class DetailViewFragment : Fragment() {
         var contentUidList: ArrayList<String> = arrayListOf()
 
         init {
-            firestore?.collection("images")?.orderBy("timestamp")
+            firestore?.collection("images")?.orderBy("timestamp", Query.Direction.DESCENDING)
                 ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                     contentDTOs.clear()
                     contentUidList.clear()
