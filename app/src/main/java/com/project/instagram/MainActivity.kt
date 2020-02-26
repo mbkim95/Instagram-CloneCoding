@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.project.instagram.Navigation.AlarmFragment
 import com.project.instagram.Navigation.DetailViewFragment
 import com.project.instagram.Navigation.GridFragment
@@ -69,6 +70,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
             R.id.action_account -> {
                 val userFragment = UserFragment()
+                val bundle = Bundle()
+                val uid = FirebaseAuth.getInstance().currentUser?.uid
+                bundle.putString("destinationUid", uid)
+                userFragment.arguments = bundle
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, userFragment)
                     .commit()
                 return true
