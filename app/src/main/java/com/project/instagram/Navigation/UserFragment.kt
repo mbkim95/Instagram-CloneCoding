@@ -1,5 +1,6 @@
 package com.project.instagram.Navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,15 +14,20 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.project.instagram.LoginActivity
+import com.project.instagram.MainActivity
 import com.project.instagram.Navigation.model.ContentDTO
 import com.project.instagram.R
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.*
+import kotlinx.android.synthetic.main.fragment_user.view.*
 
 class UserFragment : Fragment() {
     var fragmentView: View? = null
     var firestore: FirebaseFirestore? = null
     var uid: String? = null
     var auth: FirebaseAuth? = null
+    var currentUid: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,9 +39,31 @@ class UserFragment : Fragment() {
         uid = arguments?.getString("destinationUid")
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+        currentUid = auth?.currentUser?.uid
 
-        account_recyclerView?.adapter = UserFragmentRecyclerViewAdapter()
-        account_recyclerView?.layoutManager = GridLayoutManager(activity!!, 3)
+        if (uid == currentUid) {
+            // My page
+            fragmentView?.account_button_follow_singout?.text = getString(R.string.signout)
+            fragmentView?.account_button_follow_singout?.setOnClickListener {
+                activity?.finish()
+                startActivity(Intent(activity, LoginActivity::class.java))
+                auth?.signOut()
+            }
+        } else {
+            // Other user page
+            account_button_follow_singout?.text = getString(R.string.follow)
+            val mainActivity = (activity as MainActivity)
+            mainActivity.toolbar_username?.text = arguments?.getString("userId")
+            mainActivity.toolbar_button_back.setOnClickListener {
+                mainActivity.bottom_navigation.selectedItemId = R.id.action_home
+            }
+            mainActivity.toolbar_title_image?.visibility = View.GONE
+            mainActivity.toolbar_username?.visibility = View.VISIBLE
+            mainActivity.toolbar_button_back?.visibility = View.VISIBLE
+        }
+
+        fragmentView?.account_recyclerView?.adapter = UserFragmentRecyclerViewAdapter()
+        fragmentView?.account_recyclerView?.layoutManager = GridLayoutManager(activity!!, 3)
         return fragmentView
     }
 
@@ -54,14 +82,14 @@ class UserFragment : Fragment() {
                     for (snapshot in querySnapshot.documents) {
                         contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
                     }
-                    account_textView_post_count.text = contentDTOs.size.toString()
+                    fragmentView?.account_textView_post_count?.text = contentDTOs.size.toString()
                     notifyDataSetChanged()
                 }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            var width = resources.displayMetrics.widthPixels / 3
-            var imageView = ImageView(parent.context)
+            val width = resources.displayMetrics.widthPixels / 3
+            val imageView = ImageView(parent.context)
             imageView.layoutParams = LinearLayoutCompat.LayoutParams(width, width)
             return CustomViewHolder(imageView)
         }
@@ -78,7 +106,6 @@ class UserFragment : Fragment() {
 
         inner class CustomViewHolder(var imageView: ImageView) :
             RecyclerView.ViewHolder(imageView) {
-
         }
     }
 }

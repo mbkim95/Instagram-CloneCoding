@@ -42,6 +42,10 @@ class DetailViewFragment : Fragment() {
                 ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                     contentDTOs.clear()
                     contentUidList.clear()
+                    // Sometimes, This code return null or querySnapshot when it signout
+                    if (querySnapshot == null) {
+                        return@addSnapshotListener
+                    }
 
                     for (snapshot in querySnapshot!!.documents) {
                         val item = snapshot.toObject(ContentDTO::class.java)
@@ -90,6 +94,18 @@ class DetailViewFragment : Fragment() {
             } else {
                 viewHolder.detailView_item_favorite_imageView.setImageResource(R.drawable.ic_favorite_border)
             }
+
+            // This code is when the profile image is clicked
+            viewHolder.detailView_item_profile_image.setOnClickListener {
+                val fragment = UserFragment()
+                val bundle = Bundle()
+                bundle.putString("destinationUid", contentDTOs[position].uid)
+                bundle.putString("userId", contentDTOs[position].userId)
+                fragment.arguments = bundle
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.main_content, fragment)
+                    ?.commit()
+            }
         }
 
         fun favoriteEvent(position: Int) {
@@ -110,8 +126,6 @@ class DetailViewFragment : Fragment() {
                 transaction.set(tsDoc, contentDTO)
             }
         }
-
-
     }
 
     inner class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view)
