@@ -1,5 +1,6 @@
 package com.project.instagram.Navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -106,6 +107,11 @@ class DetailViewFragment : Fragment() {
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.main_content, fragment)
                     ?.commit()
+            }
+            viewHolder.detailView_item_comment_imageView.setOnClickListener { v ->
+                val intent = Intent(v.context, CommentActivity::class.java)
+                intent.putExtra("contentUid", contentUidList[position])
+                startActivity(intent)
             }
         }
 
