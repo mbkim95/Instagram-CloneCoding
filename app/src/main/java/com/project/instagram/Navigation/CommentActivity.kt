@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.project.instagram.Navigation.model.AlarmDTO
 import com.project.instagram.Navigation.model.ContentDTO
+import com.project.instagram.Navigation.util.FcmPush
 import com.project.instagram.R
 import kotlinx.android.synthetic.main.activity_comment.*
 import kotlinx.android.synthetic.main.item_comment.view.*
@@ -55,6 +56,10 @@ class CommentActivity : AppCompatActivity() {
         alarmDTO.kind = AlarmDTO.ALARM_COMMENT
         Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        val msg =
+            FirebaseAuth.getInstance().currentUser?.email + " " + getString(R.string.alarm_comment) + " of " + message
+        FcmPush.instance.sendMessage(destinationUid, getString(R.string.app_name), msg)
     }
 
     inner class CommentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

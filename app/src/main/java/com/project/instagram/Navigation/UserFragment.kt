@@ -21,6 +21,7 @@ import com.project.instagram.MainActivity
 import com.project.instagram.Navigation.model.AlarmDTO
 import com.project.instagram.Navigation.model.ContentDTO
 import com.project.instagram.Navigation.model.FollowDTO
+import com.project.instagram.Navigation.util.FcmPush
 import com.project.instagram.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.*
@@ -94,6 +95,9 @@ class UserFragment : Fragment() {
         alarmDTO.kind = AlarmDTO.ALARM_FOLLOW
         alarmDTO.timestamp = System.currentTimeMillis()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        val message = auth?.currentUser?.email + " " + getString(R.string.alarm_follow)
+        FcmPush.instance.sendMessage(destinationUid, getString(R.string.app_name), message)
     }
 
     fun getProfileImage() {

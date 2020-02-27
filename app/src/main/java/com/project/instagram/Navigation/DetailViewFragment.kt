@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.project.instagram.Navigation.model.AlarmDTO
 import com.project.instagram.Navigation.model.ContentDTO
+import com.project.instagram.Navigation.util.FcmPush
 import com.project.instagram.R
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
@@ -146,6 +147,10 @@ class DetailViewFragment : Fragment() {
         alarmDTO.kind = AlarmDTO.ALARM_LIKE
         alarmDTO.timestamp = System.currentTimeMillis()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        val message =
+            FirebaseAuth.getInstance().currentUser?.email + " " + getString(R.string.alarm_favorite)
+        FcmPush.instance.sendMessage(destinationUid, getString(R.string.app_name), message)
     }
 
     inner class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view)
