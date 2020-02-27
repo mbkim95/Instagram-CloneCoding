@@ -85,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun googleLogin() {
-        var singinIntent = googleSignInClient?.signInIntent
+        val singinIntent = googleSignInClient?.signInIntent
         startActivityForResult(singinIntent, GOOGLE_LOGIN_CODE)
     }
 
@@ -131,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
         if (requestCode == GOOGLE_LOGIN_CODE) {
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             if (result.isSuccess) {
-                var account = result.signInAccount
+                val account = result.signInAccount
                 // Second step for Google Login
                 firebaseAuthWithGoogle(account)
             }
@@ -139,7 +139,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
-        var credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
         auth?.signInWithCredential(credential)?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 // Login

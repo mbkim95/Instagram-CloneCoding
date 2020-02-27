@@ -48,7 +48,7 @@ class DetailViewFragment : Fragment() {
                         return@addSnapshotListener
                     }
 
-                    for (snapshot in querySnapshot!!.documents) {
+                    for (snapshot in querySnapshot.documents) {
                         val item = snapshot.toObject(ContentDTO::class.java)
                         contentDTOs.add(item!!)
                         contentUidList.add(snapshot.id)

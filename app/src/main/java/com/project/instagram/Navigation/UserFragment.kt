@@ -92,7 +92,6 @@ class UserFragment : Fragment() {
                     return@addSnapshotListener
                 }
                 if (documentSnapshot.data != null) {
-                    var data = documentSnapshot.data
                     val url = documentSnapshot.data!!["image"]
                     Glide.with(activity!!).load(url).apply(RequestOptions().circleCrop())
                         .into(fragmentView?.account_imageView_profile!!)
@@ -106,7 +105,7 @@ class UserFragment : Fragment() {
                 if (documentSnapshot == null) {
                     return@addSnapshotListener
                 }
-                var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
+                val followDTO = documentSnapshot.toObject(FollowDTO::class.java)
 
                 if (followDTO?.followingCount != null) {
                     fragmentView?.account_textView_following_count?.text =
@@ -161,7 +160,7 @@ class UserFragment : Fragment() {
             return@runTransaction
         }
         // Save data to third person
-        var tsDocFollower = firestore?.collection("users")?.document(uid!!)
+        val tsDocFollower = firestore?.collection("users")?.document(uid!!)
         firestore?.runTransaction { transaction ->
             var followDTO = transaction.get(tsDocFollower!!).toObject(FollowDTO::class.java)
             if (followDTO == null) {
