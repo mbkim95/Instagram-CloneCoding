@@ -91,7 +91,7 @@ class UserFragment : Fragment() {
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userId = auth?.currentUser?.email
         alarmDTO.uid = auth?.currentUser?.uid
-        alarmDTO.kind = 2
+        alarmDTO.kind = AlarmDTO.ALARM_FOLLOW
         alarmDTO.timestamp = System.currentTimeMillis()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }

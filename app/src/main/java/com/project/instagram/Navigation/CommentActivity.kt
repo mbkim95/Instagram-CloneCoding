@@ -52,7 +52,7 @@ class CommentActivity : AppCompatActivity() {
         alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
         alarmDTO.timestamp = System.currentTimeMillis()
         alarmDTO.message = message
-        alarmDTO.kind = 1
+        alarmDTO.kind = AlarmDTO.ALARM_COMMENT
         Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }

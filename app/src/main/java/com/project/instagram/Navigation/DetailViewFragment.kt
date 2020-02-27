@@ -143,7 +143,7 @@ class DetailViewFragment : Fragment() {
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
         alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
-        alarmDTO.kind = 0
+        alarmDTO.kind = AlarmDTO.ALARM_LIKE
         alarmDTO.timestamp = System.currentTimeMillis()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }
