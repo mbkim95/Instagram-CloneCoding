@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.project.instagram.Navigation.model.AlarmDTO
 import com.project.instagram.Navigation.model.ContentDTO
 import com.project.instagram.R
 import kotlinx.android.synthetic.main.fragment_detail.view.*
@@ -111,6 +112,7 @@ class DetailViewFragment : Fragment() {
             viewHolder.detailView_item_comment_imageView.setOnClickListener { v ->
                 val intent = Intent(v.context, CommentActivity::class.java)
                 intent.putExtra("contentUid", contentUidList[position])
+                intent.putExtra("destinationUid", contentDTOs[position].uid)
                 startActivity(intent)
             }
         }
@@ -129,10 +131,21 @@ class DetailViewFragment : Fragment() {
                     // When the favorite button is not clicked
                     contentDTO.favoriteCount += 1
                     contentDTO.favorites[uid!!] = true
+                    favoriteAlarm(contentDTOs[position].uid!!)
                 }
                 transaction.set(tsDoc, contentDTO)
             }
         }
+    }
+
+    fun favoriteAlarm(destinationUid: String) {
+        val alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+        alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+        alarmDTO.kind = 0
+        alarmDTO.timestamp = System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }
 
     inner class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view)

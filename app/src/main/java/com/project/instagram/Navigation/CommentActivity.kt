@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.project.instagram.Navigation.model.AlarmDTO
 import com.project.instagram.Navigation.model.ContentDTO
 import com.project.instagram.R
 import kotlinx.android.synthetic.main.activity_comment.*
@@ -18,11 +20,13 @@ import kotlinx.android.synthetic.main.item_comment.view.*
 
 class CommentActivity : AppCompatActivity() {
     var contentUid: String? = null
+    var destinationUid: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
         contentUid = intent.getStringExtra("contentUid")
+        destinationUid = intent.getStringExtra("destinationUid")
 
         comment_recyclerView.adapter = CommentRecyclerViewAdapter()
         comment_recyclerView.layoutManager = LinearLayoutManager(this)
@@ -36,8 +40,21 @@ class CommentActivity : AppCompatActivity() {
 
             FirebaseFirestore.getInstance().collection("images").document(contentUid!!)
                 .collection("comments").document().set(comment)
+            commentAlarm(destinationUid!!, comment_editText_message.text.toString())
             comment_editText_message.setText("")
         }
+    }
+
+    fun commentAlarm(destinationUid: String, message: String) {
+        val alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+        alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+        alarmDTO.timestamp = System.currentTimeMillis()
+        alarmDTO.message = message
+        alarmDTO.kind = 1
+        Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }
 
     inner class CommentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

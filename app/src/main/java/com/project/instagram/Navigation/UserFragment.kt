@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.project.instagram.LoginActivity
 import com.project.instagram.MainActivity
+import com.project.instagram.Navigation.model.AlarmDTO
 import com.project.instagram.Navigation.model.ContentDTO
 import com.project.instagram.Navigation.model.FollowDTO
 import com.project.instagram.R
@@ -83,6 +84,16 @@ class UserFragment : Fragment() {
         getProfileImage()
         getFollowerAndFollowing()
         return fragmentView
+    }
+
+    fun followerAlarm(destinationUid: String) {
+        val alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = auth?.currentUser?.email
+        alarmDTO.uid = auth?.currentUser?.uid
+        alarmDTO.kind = 2
+        alarmDTO.timestamp = System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }
 
     fun getProfileImage() {
@@ -167,7 +178,7 @@ class UserFragment : Fragment() {
                 followDTO = FollowDTO()
                 followDTO!!.followerCount = 1
                 followDTO!!.followers[currentUid!!] = true
-
+                followerAlarm(uid!!)
                 transaction.set(tsDocFollower, followDTO!!)
                 return@runTransaction
             }
@@ -179,6 +190,7 @@ class UserFragment : Fragment() {
                 // It add my follower when I follow a third person
                 followDTO!!.followerCount += 1
                 followDTO!!.followers[currentUid!!] = true
+                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollower, followDTO!!)
             return@runTransaction
