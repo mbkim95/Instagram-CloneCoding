@@ -34,19 +34,19 @@ class AlarmFragment : Fragment() {
 
         init {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
-            FirebaseFirestore.getInstance().collection("alarms").whereEqualTo(
-                "destinationUid", uid
-            ).addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                alarmDTOs.clear()
-                if (querySnapshot == null) {
-                    return@addSnapshotListener
-                }
+            FirebaseFirestore.getInstance().collection("alarms")
+                .whereEqualTo("destinationUid", uid)
+                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                    alarmDTOs.clear()
+                    if (querySnapshot == null) {
+                        return@addSnapshotListener
+                    }
 
-                for (snapshot in querySnapshot.documents) {
-                    alarmDTOs.add(snapshot.toObject(AlarmDTO::class.java)!!)
+                    for (snapshot in querySnapshot.documents) {
+                        alarmDTOs.add(snapshot.toObject(AlarmDTO::class.java)!!)
+                    }
+                    notifyDataSetChanged()
                 }
-                notifyDataSetChanged()
-            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -66,14 +66,15 @@ class AlarmFragment : Fragment() {
                 .document(alarmDTOs[position].uid!!).get().addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val url = task.result!!["image"]
-                        Glide.with(view.context).load(url).apply(RequestOptions().circleCrop()).into(view.commentViewItem_imageView_profile)
+                        Glide.with(view.context).load(url).apply(RequestOptions().circleCrop())
+                            .into(view.commentViewItem_imageView_profile)
                     }
                 }
 
             when (alarmDTOs[position].kind) {
                 AlarmDTO.ALARM_LIKE -> {
                     val alarmMessage =
-                        alarmDTOs[position].userId + getString(R.string.alarm_favorite)
+                        alarmDTOs[position].userId + " " + getString(R.string.alarm_favorite)
                     view.commentViewItem_textView_profile.text = alarmMessage
                 }
 

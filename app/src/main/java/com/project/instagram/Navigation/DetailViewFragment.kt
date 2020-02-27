@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 
 class DetailViewFragment : Fragment() {
+    var fragmentView: View? = null
     var firestore: FirebaseFirestore? = null
     var uid: String? = null
 
@@ -28,13 +30,14 @@ class DetailViewFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = LayoutInflater.from(activity).inflate(R.layout.fragment_detail, container, false)
+        fragmentView =
+            LayoutInflater.from(activity).inflate(R.layout.fragment_detail, container, false)
         firestore = FirebaseFirestore.getInstance()
         uid = FirebaseAuth.getInstance().currentUser?.uid
 
-        view.detailViewFragment_recyclerView.adapter = DetailViewRecyclerViewAdapter()
-        view.detailViewFragment_recyclerView.layoutManager = LinearLayoutManager(activity)
-        return view
+        fragmentView?.detailViewFragment_recyclerView?.adapter = DetailViewRecyclerViewAdapter()
+        fragmentView?.detailViewFragment_recyclerView?.layoutManager = LinearLayoutManager(activity)
+        return fragmentView
     }
 
     inner class DetailViewRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -75,6 +78,17 @@ class DetailViewFragment : Fragment() {
 
             // UserId
             viewHolder.detailView_item_profile_textView.text = contentDTOs[position].userId
+
+            // User Profile Image
+            firestore?.collection("profileImages")?.document(contentDTOs[position].uid!!)?.get()
+                ?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val url = task.result!!["image"]
+                        Glide.with(holder.itemView.context).load(url)
+                            .apply(RequestOptions().circleCrop())
+                            .into(viewHolder.detailView_item_profile_image)
+                    }
+                }
 
             // Image
             Glide.with(holder.itemView.context).load(contentDTOs[position].imageUrl)
